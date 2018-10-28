@@ -1,16 +1,11 @@
 #ifndef _BOOK_H
 #define _BOOK_H
 #include <string>
-
-struct date{
-	int year;
-	int month;
-	int day;
-};
+#include "date.h"
 
 class resource{
 	private:
-		struct date *borrow;
+		date *borrow;
 		std::string title;
 
 	public:
