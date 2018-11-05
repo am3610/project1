@@ -18,7 +18,7 @@ make
 ./lib <resource file> <input file>
 ```
 
-#Code
+# Code
 
 * Library.h
 	* mem_add		: Add new member to undergraduates map.
