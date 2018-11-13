@@ -1,41 +1,34 @@
-#include <fstream>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "library.h"
 
 using namespace std;
 
 library::library(char* res){
-	ifstream ifs(res, ifstream::in);
-	string input;
-	int route = 0;
-	
-	ifs >> input;					// attribute (ignore)
-	ifs >> input;
+	ifstream ifs(res);
+	string str;
+	string t, n;
 
-	ifs >> input;					// start a real data
+	getline(ifs, str);				// attribute(ignore)
+	getline(ifs, str);
 	while(!ifs.eof()){
-		if(route == 0){
-			if(!input.compare("Book")){
-				route = 1;
-			}
+		stringstream ss(str);
+		ss >> t >> n;
+		if(!t.compare("Book")){
+			books.insert(pair<string, book*>(n, new book(n)));
 		}
-		else{
-			switch(route){
-				case 1:
-					books.insert(pair<string, book*>(input, new book(input)));
-					break;
-				default:
-					break;
-			}
-			route = 0;
-		}
-		ifs >> input;
+		getline(ifs, str);
 	}
+
 	ifs.close();
 }
 
 static void readSet(struct opset &set, ifstream &ifs){
-	ifs >> set.d >> set.r_t >> set.r_n >> set.o >> set.m_t >> set.m_n; 
+	string str;
+	getline(ifs, str);
+	stringstream ss(str);
+	ss >> set.d >> set.r_t >> set.r_n >> set.o >> set.m_t >> set.m_n; 
 }
 
 void library::execute(char *inp){

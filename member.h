@@ -15,11 +15,11 @@ struct resInfo{
 };
 
 class member{
-	private:
-		std::string name;
-
 	protected:
-		date paneltyDate;
+		std::string name;						// Member's name (priority key)
+		date paneltyDate;						// Restricted date
+		std::vector<struct resInfo*> info;		// Information about resources borrowed by the user.
+		int limit;								// The amount of resources a user can borrow.
 		
 	public:
 		member(std::string name);
@@ -27,9 +27,6 @@ class member{
 };
 
 class undergraduate : public member{
-	private:
-		std::vector<struct resInfo*> info;
-		int limit;
 
 	public:
 		undergraduate(std::string name);

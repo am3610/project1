@@ -7,9 +7,9 @@ class date{
 		int year;
 		int month;
 		int day;
+		int hour;
 
 	public:
-
 		date();
 		date(int year, int month, int day);
 		date(std::string d);
