@@ -16,15 +16,11 @@ void member::setPaneltyDate(date paneltyDate){
 	}
 }
 
-undergraduate::undergraduate(string name) : member(name){
-	limit = 1;
-}
-
-void undergraduate::addInfo(string type, string title){
+void member::addInfo(string type, string title){
 	info.push_back(new struct resInfo(type, title));
 }
 
-void undergraduate::eraseInfo(string type, string title){
+void member::eraseInfo(string type, string title){
 	for(auto i = info.begin(); i != info.end(); i++){
 		if(!type.compare((*i)->type) && !title.compare((*i)->title)){
 			delete (*i);
@@ -34,7 +30,7 @@ void undergraduate::eraseInfo(string type, string title){
 	}
 }
 
-bool undergraduate::isExist(string type, string title){
+bool member::isExist(string type, string title){
 	bool ret = false;
 	for(auto i : info){
 		if(!type.compare(i->type) && !title.compare(i->title)){
@@ -45,18 +41,18 @@ bool undergraduate::isExist(string type, string title){
 	return ret;
 }
 
-bool undergraduate::isOver(){
+bool member::isOver(){
 	bool ret;
 	if(info.size() < limit) ret = false;
 	else ret = true;
 	return ret;
 }
 
-int undergraduate::getLimit(){
+int member::getLimit(){
 	return limit;
 }
 
-bool undergraduate::isRestricted(const string &borrDate, string &tmp){
+bool member::isRestricted(const string &borrDate, string &tmp){
 	bool ret = false;
 	date b(borrDate);
 	int compare = paneltyDate - b;
@@ -67,3 +63,8 @@ bool undergraduate::isRestricted(const string &borrDate, string &tmp){
 
 	return ret;
 }
+
+undergraduate::undergraduate(string name) : member(name){
+	limit = 1;
+}
+

@@ -19,19 +19,15 @@ string resource::getTitle(){
 	return title;
 }
 
-book::book(string title) : resource(title){
-	u_borrower = NULL;
-}
-
-void book::setUndergraduate(undergraduate *ug){
+void resource::setUndergraduate(undergraduate *ug){
 	u_borrower = ug;
 }
 
-void book::freeUndergraduate(){
+void resource::freeUndergraduate(){
 	u_borrower = NULL;
 }
 
-int book::isOccupied(){
+int resource::isOccupied(){
 	int ret = 0;
 	if(u_borrower != NULL){
 		ret = 1;
@@ -40,7 +36,7 @@ int book::isOccupied(){
 	return ret;
 }
 
-bool book::isLate(const string &retDate, const string &mType,
+bool resource::isLate(const string &retDate, const string &mType,
 		string &tmp){
 	int ret = false;
 	date r(retDate);
@@ -59,3 +55,8 @@ bool book::isLate(const string &retDate, const string &mType,
 
 	return ret;
 }
+
+book::book(string title) : resource(title){
+	u_borrower = NULL;
+}
+

@@ -24,18 +24,19 @@ class member{
 	public:
 		member(std::string name);
 		void setPaneltyDate(date paneltyDate);
-};
 
-class undergraduate : public member{
-
-	public:
-		undergraduate(std::string name);
 		void addInfo(std::string type, std::string title);
 		void eraseInfo(std::string type, std::string title);
 		bool isExist(std::string type, std::string title);
 		bool isOver();
 		int getLimit();
 		bool isRestricted(const std::string &borrDate, std::string &tmp);
+};
+
+class undergraduate : public member{
+
+	public:
+		undergraduate(std::string name);
 };
 
 #endif
