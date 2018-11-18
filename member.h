@@ -39,6 +39,9 @@ class member{
 		void borrowSeat(int);
 		void returnSeat();
 
+		int retStudyRoom();
+		int retSeat();
+
 };
 
 class undergraduate : public member{

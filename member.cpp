@@ -82,6 +82,14 @@ void member::returnSeat(){
 	this->seatFloor = 0;
 }
 
+int member::retStudyRoom(){
+	return studyRoom_no;
+}
+
+int member::retSeat(){
+	return seatFloor;
+}
+
 undergraduate::undergraduate(string name) : member(name){
 	limit = 1;
 }
