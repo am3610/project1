@@ -23,13 +23,8 @@ class h_date : public date{
 		int hour;
 
 	public:
-		h_date();
 		h_date(std::string);
-		h_date(date);
-		h_date operator+(const int&);
-		int operator-(const h_date&);
-		void operator=(const h_date&);
-		std::string getDate();
+		int getHour();
 };
 
 #endif

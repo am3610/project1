@@ -7,6 +7,8 @@ member::member(string name){
 	date d("00/00/00");
 	this->paneltyDate = d;
 	this->name = name;
+	this->studyRoom_no = 0;
+	this->seatFloor = 0;
 }
 
 void member::setPaneltyDate(date paneltyDate){
@@ -62,6 +64,22 @@ bool member::isRestricted(const string &borrDate, string &tmp){
 	}
 
 	return ret;
+}
+
+void member::borrowStudyRoom(int no){
+	this->studyRoom_no = no;
+}
+
+void member::returnStudyRoom(){
+	this->studyRoom_no = 0;
+}
+
+void member::borrowSeat(int floor){
+	this->seatFloor = floor;
+}
+
+void member::returnSeat(){
+	this->seatFloor = 0;
 }
 
 undergraduate::undergraduate(string name) : member(name){

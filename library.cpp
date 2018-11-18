@@ -4,10 +4,21 @@
 #include <queue>
 #include "library.h"
 
+#define SR_SIZE			10
+#define SSIZE			50
+
+#define FREE			0
+#define EMPTY			1
+#define OCCUPIED		2
+
 using namespace std;
 
 library::library(char** argv){
 	count = 0;
+
+	for(int i = 0; i < SR_SIZE; i++){
+		rooms.push_back(new studyRoom());
+	}
 
 	ifstream ifs(argv[1]);
 	string str;
@@ -129,7 +140,8 @@ void library::spcManager(string str, ofstream &ofs){
 	count += 1;
 
 	mem_add(set.m_t, set.m_n);
-	spcReset();
+	
+	spcReset(set.d);
 	if(check_8(set, count, ofs)) {}
 	else if(!(set.o).compare("B") && check_9(set, count, ofs)) {}
 	else if((set.o).compare("B") && check_10(set, count, ofs)) {}
@@ -138,13 +150,50 @@ void library::spcManager(string str, ofstream &ofs){
 	else if(!(set.o).compare("B") && check_13(set, count, ofs)) {}
 	else if(!(set.o).compare("B") && check_14(set, count, ofs)) {}
 	else{
-		if(!(set.o).compare("B")){
-		}
-		else if(!(set.o).compare("E")){
-		}
-		else if(!(set.o).compare("C")){
+		if(!(set.s_t).compare("StudyRoom")){
+			if(!(set.o).compare("B")){
+				if(!(set.m_t).compare("Undergraduate")){
+					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
+					(it->second)->borrowStudyRoom(stoi(set.s_n));
+				}
+				rooms.at(stoi(set.s_n) - 1)->borrowRoom(set.d, set.m_t, set.m_n, set.t);
+			}
+			else{
+				if(!(set.m_t).compare("Undergraduate")){
+					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
+					(it->second)->returnStudyRoom();
+				}
+				rooms.at(stoi(set.s_n) - 1)->returnRoom();
+			}
 		}
 		else{
+			if(!(set.o).compare("B")){
+				if(!(set.m_t).compare("Undergraduate")){
+					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
+					uf[(stoi(set.s_n) - 1)].insert(pair<undergraduate*, seat*>(it->second, new seat(set.d, set.m_t, set.m_n, set.t)));
+					(it->second)->borrowSeat(stoi(set.s_n));
+				}
+			}
+			else if(!(set.o).compare("E")){
+				if(!(set.m_t).compare("Undergraduate")){
+					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);	
+					uf[(stoi(set.s_n) - 1)].at(it->second)->empty(set.t);
+				}
+			}
+			else if(!(set.o).compare("C")){
+				if(!(set.m_t).compare("Undergraduate")){
+					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);	
+					uf[(stoi(set.s_n) - 1)].at(it->second)->comeback();
+				}
+			}
+			else{
+				if(!(set.m_t).compare("Undergraduate")){
+					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
+					delete uf[(stoi(set.s_n) - 1)].at(it->second);
+					uf[(stoi(set.s_n) - 1)].erase(it->second);
+					(it->second)->returnSeat();
+				}
+			}
 		}
 
 		ofs << count << "\t0\tSuccess." << endl;
@@ -304,11 +353,25 @@ void library::returnRes(struct opset op){
 
 bool library::check_8(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+	if(!(sp.s_t).compare("StudyRoom")){
+		if(stoi(sp.s_n) > 10 || stoi(sp.s_n) < 1)
+			ret = true;
+	}
+	else{
+		if(stoi(sp.s_n) > 3 || stoi(sp.s_n) < 1)
+			ret = true;
+	}
+	
+	if(ret){
+		ofs << count << "\t8\tInvalid space id." << endl;
+	}
+
 	return ret;
 }
 
 bool library::check_9(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+
 	return ret;
 }
 
@@ -337,6 +400,43 @@ bool library::check_14(struct spset sp, const int count, ofstream &ofs){
 	return ret;
 }
 
-void library::spcReset(){
-	
+void library::spcReset(string d){
+	h_date base(d);
+	for(auto it : rooms){
+		if(it->getStatus() == FREE){
+			continue;
+		}
+
+		h_date comp(it->getTime());
+
+		if(base - comp > 0 || base.getHour() > 18 ||  base.getHour() - comp.getHour() > it->getDuring()){
+			if(!(it->getMemType()).compare("Undergraduate")){
+				map<string, undergraduate*>::iterator ut = undergraduates.find(it->getMemName());
+				(ut->second)->returnStudyRoom();
+			}
+			it->returnRoom();
+		}
+	}
+
+	int tl[3] = {24, 21, 18};
+
+	for(int i = 0; i < 3; i++){
+		for(auto it = uf[i].begin(); it != uf[i].end();){
+			h_date comp((it->second)->getTime());
+			if(base - comp > 0 || base.getHour() > tl[i] ||  base.getHour() - comp.getHour() > (it->second)->getDuring()){
+				(it->first)->returnSeat();
+				delete it->second;
+				uf[i].erase(it++);
+			}
+			else if((it->second)->getStatus() == EMPTY && base.getHour() - (it->second)->getEtime() > 1){
+				(it->first)->returnSeat();
+				delete it->second;
+				uf[i].erase(it++);
+
+			}
+			else{
+				++it;
+			}
+		}
+	}
 }

@@ -35,9 +35,7 @@ class library{
 
 		std::map<std::string, undergraduate*> undergraduates;
 		std::map<std::string, book*> books;
-		std::map<std::string, seat*> f1; 
-		std::map<std::string, seat*> f2; 
-		std::map<std::string, seat*> f3;
+		std::map<undergraduate*, seat*> uf[3]; 
 		std::vector<studyRoom*> rooms;
 		
 		void resManager(std::string, std::ofstream&);
@@ -64,7 +62,7 @@ class library{
 		bool check_13(struct spset, const int, std::ofstream&);
 		bool check_14(struct spset, const int, std::ofstream&);
 
-		void spcReset(); 
+		void spcReset(std::string); 
 
 	public:
 		library(char**);
