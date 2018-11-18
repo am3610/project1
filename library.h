@@ -18,24 +18,28 @@ struct opset{
 
 class library{
 	private:
+		int count;
+
 		std::map<std::string, undergraduate*> undergraduates;
 		std::map<std::string, book*> books;
 		
-		void mem_add(std::string type, std::string name);
-		bool check_1(struct opset op, const int count, std::ofstream &ofs);
-		bool check_2(struct opset op, const int count, std::ofstream &ofs);
-		bool check_3(struct opset op, const int count, std::ofstream &ofs);
-		bool check_4(struct opset op, const int count, std::ofstream &ofs);
-		bool check_5(struct opset op, const int count, std::ofstream &ofs);
-		bool check_6(struct opset op, const int count, std::ofstream &ofs);
-		bool check_7(struct opset op, const int count, std::ofstream &ofs);
+		void resManager(std::string, std::ofstream&);
+		void spcManager(std::string, std::ofstream&);
 
-		void borrowRes(struct opset op);
-		void returnRes(struct opset op);
+		void mem_add(std::string, std::string);
+		bool check_1(struct opset, const int, std::ofstream&);
+		bool check_2(struct opset, const int, std::ofstream&);
+		bool check_3(struct opset, const int, std::ofstream&);
+		bool check_4(struct opset, const int, std::ofstream&);
+		bool check_5(struct opset, const int, std::ofstream&);
+		bool check_6(struct opset, const int, std::ofstream&);
+		bool check_7(struct opset, const int, std::ofstream&);
+
+		void borrowRes(struct opset);
+		void returnRes(struct opset);
 
 	public:
-		library(char* res);
-		void execute(char *inp);
+		library(char**);
 };
 
 #endif

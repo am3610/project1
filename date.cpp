@@ -31,7 +31,7 @@ date::date(string d){
 	}
 	buf.push_back(stoi(tmp));
 
-	year = buf.at(0);
+	year = buf.at(0) % 100;
 	month = buf.at(1);
 	day = buf.at(2);
 }

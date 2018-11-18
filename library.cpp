@@ -1,12 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <queue>
 #include "library.h"
 
 using namespace std;
 
-library::library(char* res){
-	ifstream ifs(res);
+library::library(char** argv){
+	count = 0;
+
+	ifstream ifs(argv[1]);
 	string str;
 	string t, n;
 
@@ -22,47 +25,102 @@ library::library(char* res){
 	}
 
 	ifs.close();
+
+	ofstream ofs("output.dat");
+	ofs << "Op_#\tReturn_code\tDescription" << endl;
+
+	///////////////////////////////////////////////////////////////////////
+
+	ifstream rs(argv[2]);
+	ifstream ss(argv[3]);
+
+	queue<string> res;
+
+	getline(rs, str);
+	getline(rs, str);
+	while(!rs.eof()){
+		res.push(str);
+		getline(rs, str);
+	}
+
+	queue<string> spc;
+
+	getline(ss, str);
+	getline(ss, str);
+	while(!ss.eof()){
+		spc.push(str);
+		getline(ss, str);
+	}
+
+	while(!res.empty() && !spc.empty()){
+		stringstream rss(res.front());
+		stringstream sss(spc.front());
+		string r, s;
+		rss >> r;
+		sss >> s;
+		date rd(r);
+		date sd(s);
+
+		if(sd - rd < 0){
+			spcManager(spc.front(), ofs);
+			spc.pop();
+		}
+		else{
+			resManager(res.front(), ofs);
+			res.pop();
+		}
+	}
+
+	while(!spc.empty()){
+		spcManager(spc.front(), ofs);
+		spc.pop();
+	}
+
+	while(!res.empty()){
+		resManager(res.front(), ofs);
+		res.pop();
+	}
+
+	rs.close();
+	ss.close();
+	ofs.close();
 }
 
-static void readSet(struct opset &set, ifstream &ifs){
-	string str;
-	getline(ifs, str);
+static void readSet(struct opset &set, string str){
 	stringstream ss(str);
 	ss >> set.d >> set.r_t >> set.r_n >> set.o >> set.m_t >> set.m_n; 
 }
 
-void library::execute(char *inp){
-	ifstream ifs(inp, ifstream::in);
-	ofstream ofs("output.dat");
+void library::resManager(string str, ofstream &ofs){
+
 	struct opset set;
 
-	readSet(set, ifs);  // attribute (ignore) 
+	readSet(set, str);  
 
-	readSet(set, ifs);
+	count += 1;
 
-	int count = 0;
-	ofs << "Op_#\tReturn_code\tDescription" << endl;
-	while(!ifs.eof()){
-		count += 1;
-		mem_add(set.m_t, set.m_n);
-		if(!(set.o).compare("B") && check_1(set, count, ofs)) {readSet(set, ifs); continue;}
-		else if(!(set.o).compare("B") && check_2(set, count, ofs)) {readSet(set, ifs); continue;}
-		else if(!(set.o).compare("R") && check_3(set, count, ofs)) {readSet(set, ifs); continue;}
-		else if(!(set.o).compare("B") && check_4(set, count, ofs)) {readSet(set, ifs); continue;}
-		else if(!(set.o).compare("B") && check_5(set, count, ofs)) {readSet(set, ifs); continue;}
-		else if(!(set.o).compare("B") && check_6(set, count, ofs)) {readSet(set, ifs); continue;}
-		else if(!(set.o).compare("R") && check_7(set, count, ofs)) {readSet(set, ifs); continue;}
-		else{
-			if(!(set.o).compare("B")){
-				borrowRes(set);
-			}
-			else{
-				returnRes(set);
-			}
-			ofs << count << "\t0\tSuccess." << endl;
-			readSet(set, ifs);
+	mem_add(set.m_t, set.m_n);
+	if(!(set.o).compare("B") && check_1(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_2(set, count, ofs)) {}
+	else if(!(set.o).compare("R") && check_3(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_4(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_5(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_6(set, count, ofs)) {}
+	else if(!(set.o).compare("R") && check_7(set, count, ofs)) {}
+	else{
+		if(!(set.o).compare("B")){
+			borrowRes(set);
 		}
+		else{
+			returnRes(set);
+		}
+
+		ofs << count << "\t0\tSuccess." << endl;
 	}
+}
+
+void library::spcManager(string str, ofstream &ofs){
+	ofs << str << endl;
 }
 
 void library::mem_add(string type, string name){
