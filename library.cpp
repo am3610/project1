@@ -140,7 +140,7 @@ static void readSpcSet(struct spset &set, string str){
 void library::resManager(string str, ofstream &ofs){
 	struct opset set;
 
-	readResSet(set, str);  
+	readSet(set, str);  
 
 	count += 1;
 
@@ -232,6 +232,10 @@ void library::spcManager(string str, ofstream &ofs){
 
 		ofs << count << "\t0\tSuccess." << endl;
 	}
+}
+
+void library::spcManager(string str, ofstream &ofs){
+	ofs << str << endl;
 }
 
 void library::mem_add(string type, string name){
