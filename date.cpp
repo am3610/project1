@@ -90,3 +90,31 @@ string date::getDate(){
 
 	return str; 
 }
+
+////////////////////////////////////////////////// 
+//					 h_date						//
+//////////////////////////////////////////////////
+
+h_date::h_date(string d){
+	string tmp;
+	vector<int> buf;
+	for(auto s : d){
+		if(s == '/'){
+			buf.push_back(stoi(tmp));
+			tmp.clear();
+		}
+		else{
+			tmp.push_back(s);
+		}
+	}
+	buf.push_back(stoi(tmp));
+
+	year = buf.at(0);
+	month = buf.at(1);
+	day = buf.at(2);
+	hour = buf.at(3);
+}
+
+int h_date::getHour(){
+	return hour;
+}

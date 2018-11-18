@@ -23,7 +23,9 @@ class member{
 		std::vector<struct resInfo*> info;		// Information about resources borrowed by the user.
 		int limit;								// The amount of resources a user can borrow.
 		int memory;
-
+		int studyRoom_no;
+		int seatFloor;
+		
 	public:
 		member(std::string);
 		void setPaneltyDate(date);
@@ -39,6 +41,11 @@ class member{
 		void memAdd(int);
 		bool memOver(int);
 		bool isLate(std::string);
+
+		void borrowStudyRoom(int);
+		void returnStudyRoom();
+		void borrowSeat(int);
+		void returnSeat();
 };
 
 class undergraduate : public member{
