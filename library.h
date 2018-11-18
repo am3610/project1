@@ -19,6 +19,8 @@ struct opset{
 
 class library{
 	private:
+		int count;
+
 		std::map<std::string, undergraduate*> undergraduates;
 		std::map<std::string, graduate*> graduates;
 		std::map<std::string, faculty*> faculties;
@@ -26,6 +28,9 @@ class library{
 		std::map<std::string, ebook*> ebooks;
 		std::map<std::string, std::map<std::string, magazine*> > magazines;
 		
+		void resManager(std::string, std::ofstream&);
+		void spcManager(std::string, std::ofstream&);
+
 		void mem_add(std::string, std::string);
 		bool check_1(struct opset, const int, std::ofstream&);
 		bool check_2(struct opset, const int, std::ofstream&);
@@ -41,8 +46,7 @@ class library{
 		void returnRes(struct opset);
 
 	public:
-		library(char*);
-		void execute(char*);
+		library(char**);
 };
 
 #endif

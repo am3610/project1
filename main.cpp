@@ -8,8 +8,7 @@ int main(int argc, char** argv){
 		cout << "usage: ./lib <resource file> <input file>" << endl;
 	}
 	else{
-		library lib(argv[1]);
-		lib.execute(argv[2]);
+		library lib(argv);
 	}
 
 	return 0;
