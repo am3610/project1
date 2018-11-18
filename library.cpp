@@ -140,7 +140,7 @@ static void readSpcSet(struct spset &set, string str){
 void library::resManager(string str, ofstream &ofs){
 	struct opset set;
 
-	readSet(set, str);  
+	readResSet(set, str);  
 
 	count += 1;
 
@@ -232,10 +232,6 @@ void library::spcManager(string str, ofstream &ofs){
 
 		ofs << count << "\t0\tSuccess." << endl;
 	}
-}
-
-void library::spcManager(string str, ofstream &ofs){
-	ofs << str << endl;
 }
 
 void library::mem_add(string type, string name){
@@ -657,6 +653,7 @@ void library::returnRes(struct opset op){
 
 bool library::check_8(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 	if(!(sp.s_t).compare("StudyRoom")){
 		if(stoi(sp.s_n) > 10 || stoi(sp.s_n) < 1)
 			ret = true;
@@ -670,11 +667,14 @@ bool library::check_8(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t8\tInvalid space id." << endl;
 	}
 
+=======
+>>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_9(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	h_date base(sp.d);
 	int bh = base.getHour();
@@ -696,11 +696,14 @@ bool library::check_9(struct spset sp, const int count, ofstream &ofs){
 		}
 	}
 
+=======
+>>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_10(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.m_t).compare("Undergraduate")){
 		map<string, undergraduate*>::iterator it = undergraduates.find(sp.m_n);
@@ -718,11 +721,14 @@ bool library::check_10(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t10\tYou did not borrow this space." << endl;
 	}
 
+=======
+>>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_11(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.m_t).compare("Undergraduate")){
 		map<string, undergraduate*>::iterator it = undergraduates.find(sp.m_n);
@@ -740,11 +746,14 @@ bool library::check_11(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t11\tYou already borrowed this kind of space." << endl;
 	}
 
+=======
+>>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_12(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.s_t).compare("StudyRoom")){
 		if(stoi(sp.n_m) > 6){
@@ -761,11 +770,14 @@ bool library::check_12(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t12\tExceed available number." << endl;
 	}
 
+=======
+>>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_13(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.s_t).compare("StudyRoom")){
 		if(stoi(sp.t) > 3){
@@ -785,11 +797,14 @@ bool library::check_13(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t13\tExceed available time." << endl;
 	}
 
+=======
+>>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_14(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.s_t).compare("StudyRoom")){
 		if((rooms.at(stoi(sp.s_n) - 1)->getStatus() != FREE)){
@@ -887,4 +902,11 @@ void library::spcReset(string d){
 			}
 		}
 	}
+=======
+	return ret;
+}
+
+void library::spcReset(){
+	
+>>>>>>> Skeleton code for space input in library.cpp.
 }
