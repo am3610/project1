@@ -57,6 +57,9 @@ class member{
 		void returnStudyRoom();
 		void borrowSeat(int);
 		void returnSeat();
+
+		int retStudyRoom();
+		int retSeat();
 };
 
 class undergraduate : public member{
