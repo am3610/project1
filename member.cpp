@@ -139,6 +139,22 @@ bool member::isLate(string Date){
 	return ret;
 }
 
+void member::borrowStudyRoom(int no){
+	this->studyRoom_no = no;
+}
+
+void member::returnStudyRoom(){
+	this->studyRoom_no = 0;
+}
+
+void member::borrowSeat(int floor){
+	this->seatFloor = floor;
+}
+
+void member::returnSeat(){
+	this->seatFloor = 0;
+}
+
 undergraduate::undergraduate(string name) : member(name){
 	limit = 1;
 	memory = 100;

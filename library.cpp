@@ -653,7 +653,6 @@ void library::returnRes(struct opset op){
 
 bool library::check_8(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
-<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 	if(!(sp.s_t).compare("StudyRoom")){
 		if(stoi(sp.s_n) > 10 || stoi(sp.s_n) < 1)
 			ret = true;
@@ -667,14 +666,11 @@ bool library::check_8(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t8\tInvalid space id." << endl;
 	}
 
-=======
->>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_9(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
-<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	h_date base(sp.d);
 	int bh = base.getHour();
@@ -696,14 +692,11 @@ bool library::check_9(struct spset sp, const int count, ofstream &ofs){
 		}
 	}
 
-=======
->>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_10(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
-<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.m_t).compare("Undergraduate")){
 		map<string, undergraduate*>::iterator it = undergraduates.find(sp.m_n);
@@ -721,14 +714,11 @@ bool library::check_10(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t10\tYou did not borrow this space." << endl;
 	}
 
-=======
->>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_11(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
-<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.m_t).compare("Undergraduate")){
 		map<string, undergraduate*>::iterator it = undergraduates.find(sp.m_n);
@@ -746,14 +736,11 @@ bool library::check_11(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t11\tYou already borrowed this kind of space." << endl;
 	}
 
-=======
->>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_12(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
-<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.s_t).compare("StudyRoom")){
 		if(stoi(sp.n_m) > 6){
@@ -770,14 +757,11 @@ bool library::check_12(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t12\tExceed available number." << endl;
 	}
 
-=======
->>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_13(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
-<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.s_t).compare("StudyRoom")){
 		if(stoi(sp.t) > 3){
@@ -797,14 +781,11 @@ bool library::check_13(struct spset sp, const int count, ofstream &ofs){
 		ofs << count << "\t13\tExceed available time." << endl;
 	}
 
-=======
->>>>>>> Skeleton code for space input in library.cpp.
 	return ret;
 }
 
 bool library::check_14(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
-<<<<<<< 3b119fa603add480eb84836a69afabe8f14c3339
 
 	if(!(sp.s_t).compare("StudyRoom")){
 		if((rooms.at(stoi(sp.s_n) - 1)->getStatus() != FREE)){
@@ -902,11 +883,47 @@ void library::spcReset(string d){
 			}
 		}
 	}
-=======
+
 	return ret;
 }
 
-void library::spcReset(){
-	
->>>>>>> Skeleton code for space input in library.cpp.
+void library::spcReset(string d){
+	h_date base(d);
+	for(auto it : rooms){
+		if(it->getStatus() == FREE){
+			continue;
+		}
+
+		h_date comp(it->getTime());
+
+		if(base - comp > 0 || base.getHour() > 18 ||  base.getHour() - comp.getHour() > it->getDuring()){
+			if(!(it->getMemType()).compare("Undergraduate")){
+				map<string, undergraduate*>::iterator ut = undergraduates.find(it->getMemName());
+				(ut->second)->returnStudyRoom();
+			}
+			it->returnRoom();
+		}
+	}
+
+	int tl[3] = {24, 21, 18};
+
+	for(int i = 0; i < 3; i++){
+		for(auto it = uf[i].begin(); it != uf[i].end();){
+			h_date comp((it->second)->getTime());
+			if(base - comp > 0 || base.getHour() > tl[i] ||  base.getHour() - comp.getHour() > (it->second)->getDuring()){
+				(it->first)->returnSeat();
+				delete it->second;
+				uf[i].erase(it++);
+			}
+			else if((it->second)->getStatus() == EMPTY && base.getHour() - (it->second)->getEtime() > 1){
+				(it->first)->returnSeat();
+				delete it->second;
+				uf[i].erase(it++);
+
+			}
+			else{
+				++it;
+			}
+		}
+	}
 }

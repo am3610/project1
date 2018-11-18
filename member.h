@@ -25,7 +25,9 @@ class member{
 		int studyRoom_no;
 		int seatFloor;
 		int memory;
-
+		int studyRoom_no;
+		int seatFloor;
+		
 	public:
 		member(std::string);
 		void setPaneltyDate(date);
@@ -50,6 +52,11 @@ class member{
 		void memAdd(int);
 		bool memOver(int);
 		bool isLate(std::string);
+
+		void borrowStudyRoom(int);
+		void returnStudyRoom();
+		void borrowSeat(int);
+		void returnSeat();
 };
 
 class undergraduate : public member{
