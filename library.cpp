@@ -29,8 +29,6 @@ library::library(char** argv){
 	ofstream ofs("output.dat");
 	ofs << "Op_#\tReturn_code\tDescription" << endl;
 
-	///////////////////////////////////////////////////////////////////////
-
 	ifstream rs(argv[2]);
 	ifstream ss(argv[3]);
 
@@ -86,21 +84,25 @@ library::library(char** argv){
 	ofs.close();
 }
 
-static void readSet(struct opset &set, string str){
+static void readResSet(struct opset &set, string str){
 	stringstream ss(str);
 	ss >> set.d >> set.r_t >> set.r_n >> set.o >> set.m_t >> set.m_n; 
 }
 
-void library::resManager(string str, ofstream &ofs){
+static void readSpcSet(struct spset &set, string str){
+	stringstream ss(str);
+	ss >> set.d >> set.s_t >> set.s_n >> set.o >> set.m_t >> set.m_n >> set.n_m >> set.t; 
+}
 
+void library::resManager(string str, ofstream &ofs){
 	struct opset set;
 
-	readSet(set, str);  
+	readResSet(set, str);  
 
 	count += 1;
 
 	mem_add(set.m_t, set.m_n);
-	if(!(set.o).compare("B") && check_1(set, count, ofs)) {}
+	if(check_1(set, count, ofs)) {}
 	else if(!(set.o).compare("B") && check_2(set, count, ofs)) {}
 	else if(!(set.o).compare("R") && check_3(set, count, ofs)) {}
 	else if(!(set.o).compare("B") && check_4(set, count, ofs)) {}
@@ -120,7 +122,33 @@ void library::resManager(string str, ofstream &ofs){
 }
 
 void library::spcManager(string str, ofstream &ofs){
-	ofs << str << endl;
+	struct spset set;
+
+	readSpcSet(set, str);  
+
+	count += 1;
+
+	mem_add(set.m_t, set.m_n);
+	spcReset();
+	if(check_8(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_9(set, count, ofs)) {}
+	else if((set.o).compare("B") && check_10(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_11(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_12(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_13(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_14(set, count, ofs)) {}
+	else{
+		if(!(set.o).compare("B")){
+		}
+		else if(!(set.o).compare("E")){
+		}
+		else if(!(set.o).compare("C")){
+		}
+		else{
+		}
+
+		ofs << count << "\t0\tSuccess." << endl;
+	}
 }
 
 void library::mem_add(string type, string name){
@@ -132,6 +160,12 @@ void library::mem_add(string type, string name){
 		}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////
+/*
+							  Check for resource
+																			*/
+//////////////////////////////////////////////////////////////////////////////
 
 bool library::check_1(struct opset op, const int count, ofstream &ofs){
 	bool ret = false;
@@ -260,4 +294,49 @@ void library::returnRes(struct opset op){
 			(rt->second)->freeUndergraduate();
 		}
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/*
+							   Check for space
+																			*/
+//////////////////////////////////////////////////////////////////////////////
+
+bool library::check_8(struct spset sp, const int count, ofstream &ofs){
+	bool ret = false;
+	return ret;
+}
+
+bool library::check_9(struct spset sp, const int count, ofstream &ofs){
+	bool ret = false;
+	return ret;
+}
+
+bool library::check_10(struct spset sp, const int count, ofstream &ofs){
+	bool ret = false;
+	return ret;
+}
+
+bool library::check_11(struct spset sp, const int count, ofstream &ofs){
+	bool ret = false;
+	return ret;
+}
+
+bool library::check_12(struct spset sp, const int count, ofstream &ofs){
+	bool ret = false;
+	return ret;
+}
+
+bool library::check_13(struct spset sp, const int count, ofstream &ofs){
+	bool ret = false;
+	return ret;
+}
+
+bool library::check_14(struct spset sp, const int count, ofstream &ofs){
+	bool ret = false;
+	return ret;
+}
+
+void library::spcReset(){
+	
 }
