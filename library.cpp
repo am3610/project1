@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <queue>
+#include <algorithm>
 #include "library.h"
 
 #define SR_SIZE			10
@@ -210,7 +211,7 @@ void library::spcManager(string str, ofstream &ofs){
 			else if(!(set.o).compare("E")){
 				if(!(set.m_t).compare("Undergraduate")){
 					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);	
-					uf[(stoi(set.s_n) - 1)].at(it->second)->empty(set.t);
+					uf[(stoi(set.s_n) - 1)].at(it->second)->empty(set.d);
 				}
 			}
 			else if(!(set.o).compare("C")){
@@ -671,31 +672,175 @@ bool library::check_8(struct spset sp, const int count, ofstream &ofs){
 bool library::check_9(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
 
+	h_date base(sp.d);
+	int bh = base.getHour();
+
+	if(!(sp.s_t).compare("StudyRoom")){
+		if(bh < 9 || bh >= 18){
+			ret = true;
+			ofs << count << "\t9\tThis space is not available now. Available from 09 to 18." << endl;
+		}
+	}
+	else{
+		if(stoi(sp.s_n) == 2 && (bh < 9 || bh >= 21)){
+			ret = true;
+			ofs << count << "\t9\tThis space is not available now. Available from 09 to 21." << endl;
+		}
+		else if(stoi(sp.s_n) == 3 && (bh < 9 || bh >= 18)){
+			ret = true;
+			ofs << count << "\t9\tThis space is not available now. Available from 09 to 18." << endl;
+		}
+	}
+
 	return ret;
 }
 
 bool library::check_10(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+
+	if(!(sp.m_t).compare("Undergraduate")){
+		map<string, undergraduate*>::iterator it = undergraduates.find(sp.m_n);
+		
+		if(!(sp.s_t).compare("StudyRoom") && (it->second)->retStudyRoom() != stoi(sp.s_n)){
+			ret = true;
+		}
+		
+		if(!(sp.s_t).compare("Seat") && (it->second)->retSeat() != stoi(sp.s_n)){
+			ret = true;
+		}
+	}
+
+	if(ret){
+		ofs << count << "\t10\tYou did not borrow this place." << endl;
+	}
+
 	return ret;
 }
 
 bool library::check_11(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+
+	if(!(sp.m_t).compare("Undergraduate")){
+		map<string, undergraduate*>::iterator it = undergraduates.find(sp.m_n);
+		
+		if(!(sp.s_t).compare("StudyRoom") && (it->second)->retStudyRoom() != 0){
+			ret = true;
+		}
+		
+		if(!(sp.s_t).compare("Seat") && (it->second)->retSeat() != 0){
+			ret = true;
+		}
+	}
+
+	if(ret){
+		ofs << count << "\t11\tYou already borrowed this kind of space." << endl;
+	}
+
 	return ret;
 }
 
 bool library::check_12(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+
+	if(!(sp.s_t).compare("StudyRoom")){
+		if(stoi(sp.n_m) > 6){
+			ret = true;
+		}
+	}
+	else{	
+		if(stoi(sp.n_m) > 1){
+			ret = true;
+		}
+	}
+
+	if(ret){
+		ofs << count << "\t12\tExceed available number." << endl;
+	}
+
 	return ret;
 }
 
 bool library::check_13(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+
+	if(!(sp.s_t).compare("StudyRoom")){
+		if(stoi(sp.t) > 3){
+			ret = true;
+		}
+	}
+
+	else{	
+		if(!(sp.m_t).compare("Undergraduate")){
+			if(stoi(sp.t) > 3){
+				ret = true;
+			}
+		}
+	}
+
+	if(ret){
+		ofs << count << "\t13\tExceed available time." << endl;
+	}
+
 	return ret;
 }
 
 bool library::check_14(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
+
+	if(!(sp.s_t).compare("StudyRoom")){
+		if((rooms.at(stoi(sp.s_n) - 1)->getStatus() != FREE)){
+			h_date hour(rooms.at(stoi(sp.s_n) - 1)->getTime());
+
+			int h = hour.getHour();
+			h = h + rooms.at(stoi(sp.s_n) - 1)->getDuring();
+
+			string ph;
+			if(h > 18){
+				ph = to_string(18);
+			}
+			else if(h < 10){
+				ph = "0" + to_string(h);
+			}
+			else{
+				ph = to_string(h);
+			}
+
+			ofs << count << "\t14\tThere is no remain space. This space is available after " <<
+				ph << "." << endl;
+			ret = true;
+		}
+	}
+	else{
+		int tl[3] = {24, 21, 18};
+
+		int idx = stoi(sp.s_n) - 1; 
+
+		int h = tl[idx];
+
+		if(uf[idx].size() == 50){
+			for(auto it = uf[idx].begin(); it != uf[idx].end(); it++){
+				h_date hour((it->second)->getTime());
+				int t = hour.getHour() + (it->second)->getDuring();
+				h = min(h, t);
+			}
+
+			string ph;
+
+			if(h >= 24){
+				ph = "00";
+			}
+			else if(h < 10){
+				ph = "0" + to_string(h);
+			}
+			else{
+				ph = to_string(h);
+			}
+
+			ofs << count << "\t14\tThere is no remain space. This space is available after " <<
+				ph << "." << endl;
+			ret = true;
+		}
+	}
 	return ret;
 }
 
