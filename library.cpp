@@ -554,7 +554,7 @@ void library::spcReset(string d){
 
 		h_date comp(it->getTime());
 
-		if(base - comp > 0 || base.getHour() > 18 ||  base.getHour() - comp.getHour() > it->getDuring()){
+		if(base - comp > 0 || base.getHour() > 18 ||  base.getHour() - comp.getHour() >= it->getDuring()){
 			if(!(it->getMemType()).compare("Undergraduate")){
 				map<string, undergraduate*>::iterator ut = undergraduates.find(it->getMemName());
 				(ut->second)->returnStudyRoom();
@@ -568,12 +568,12 @@ void library::spcReset(string d){
 	for(int i = 0; i < 3; i++){
 		for(auto it = uf[i].begin(); it != uf[i].end();){
 			h_date comp((it->second)->getTime());
-			if(base - comp > 0 || base.getHour() > tl[i] ||  base.getHour() - comp.getHour() > (it->second)->getDuring()){
+			if(base - comp > 0 || base.getHour() > tl[i] ||  base.getHour() - comp.getHour() >= (it->second)->getDuring()){
 				(it->first)->returnSeat();
 				delete it->second;
 				uf[i].erase(it++);
 			}
-			else if((it->second)->getStatus() == EMPTY && base.getHour() - (it->second)->getEtime() > 1){
+			else if((it->second)->getStatus() == EMPTY && base.getHour() - (it->second)->getEtime() >= 1){
 				(it->first)->returnSeat();
 				delete it->second;
 				uf[i].erase(it++);
