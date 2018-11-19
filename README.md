@@ -14,7 +14,7 @@ make
 # Usage
 
 * ~~Type ./lib with resource and input on command line.~~
-* Type ./lib whith resource, input, space file on command line.
+* Type ./lib with resource, input and space file on command line.
 
 ```
 ./lib <resource file> <input file> <space file>
@@ -41,11 +41,11 @@ make
 	* isLate		: Check whether the return date is over.
 
 * space.h (v 1.1)
-	*borrowRoom		: Save some information of a borrower, time and during. The room status is changed to "OCCUPIED".
-	*ReturnRoom		: Change status of studyroom from "OCCUPIED" to "FREE".
+	* borrowRoom	: Save some information of a borrower, time and during. The room status is changed to "OCCUPIED".
+	* ReturnRoom	: Change status of studyroom from "OCCUPIED" to "FREE".
 
-	*empty			: Change seat status to "EMPTY". Also, save when the user leave the seat.
-	*comback		: Change seat status to "OCCUPIED".
-	*getEtime		: Return empty time.
+	* empty			: Change seat status to "EMPTY". Also, save when the user leave the seat.
+	* comback		: Change seat status to "OCCUPIED".
+	* getEtime		: Return empty time.
 ---------------
 
