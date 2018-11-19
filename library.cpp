@@ -711,7 +711,7 @@ bool library::check_10(struct spset sp, const int count, ofstream &ofs){
 	}
 
 	if(ret){
-		ofs << count << "\t10\tYou did not borrow this place." << endl;
+		ofs << count << "\t10\tYou did not borrow this space." << endl;
 	}
 
 	return ret;
@@ -853,7 +853,7 @@ void library::spcReset(string d){
 
 		h_date comp(it->getTime());
 
-		if(base - comp > 0 || base.getHour() > 18 ||  base.getHour() - comp.getHour() >= it->getDuring()){
+		if(base - comp > 0 || base.getHour() >= 18 ||  base.getHour() - comp.getHour() >= it->getDuring()){
 			if(!(it->getMemType()).compare("Undergraduate")){
 				map<string, undergraduate*>::iterator ut = undergraduates.find(it->getMemName());
 				(ut->second)->returnStudyRoom();
@@ -867,7 +867,7 @@ void library::spcReset(string d){
 	for(int i = 0; i < 3; i++){
 		for(auto it = uf[i].begin(); it != uf[i].end();){
 			h_date comp((it->second)->getTime());
-			if(base - comp > 0 || base.getHour() > tl[i] ||  base.getHour() - comp.getHour() >= (it->second)->getDuring()){
+			if(base - comp > 0 || base.getHour() >= tl[i] ||  base.getHour() - comp.getHour() >= (it->second)->getDuring()){
 				(it->first)->returnSeat();
 				delete it->second;
 				uf[i].erase(it++);
