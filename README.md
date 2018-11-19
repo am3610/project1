@@ -43,7 +43,6 @@ make
 * space.h (v 1.1)
 	* borrowRoom	: Save some information of a borrower, time and during. The room status is changed to "OCCUPIED".
 	* ReturnRoom	: Change status of studyroom from "OCCUPIED" to "FREE".
-
 	* empty			: Change seat status to "EMPTY". Also, save when the user leave the seat.
 	* comback		: Change seat status to "OCCUPIED".
 	* getEtime		: Return empty time.
