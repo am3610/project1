@@ -4,8 +4,8 @@
 using namespace std;
 
 int main(int argc, char** argv){
-	if(argc < 3){
-		cout << "usage: ./lib <resource file> <input file>" << endl;
+	if(argc < 4){
+		cout << "usage: ./lib <resource.dat> <input.dat> <space.dat>" << endl;
 	}
 	else{
 		library lib(argv);
