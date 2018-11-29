@@ -132,9 +132,44 @@ static void readResSet(struct opset &set, string str){
 	ss >> set.d >> set.r_t >> set.r_n >> set.o >> set.m_t >> set.m_n; 
 }
 
+static bool isName(const string &str){
+	bool ret = true;
+	for(auto s : str){
+		if(s >= '0' && s <= '9'){
+			ret = false;
+		}
+	}
+	
+	return ret;
+}
+
 static void readSpcSet(struct spset &set, string str){
 	stringstream ss(str);
 	ss >> set.d >> set.s_t >> set.s_n >> set.o >> set.m_t >> set.m_n >> set.n_m >> set.t; 
+
+	string e = "\t-1\t";
+	date d(set.d);
+	date c("09/12/30");
+
+	if(d - c <= 0){
+		e += "Date out of range";
+		throw e;	
+	}else if(set.s_t.compare("Seat") && set.s_t.compare("StudyRoom")){
+		e += "Non-exist space type";
+		throw e;	
+	}else if(set.o.compare("B") && set.o.compare("R") && set.o.compare("E") && set.o.compare("C")){
+		e += "Non-exist operation";
+		throw e;	
+	}else if(set.m_t.compare("Undergraduate") && set.m_t.compare("Graduate") && set.m_t.compare("Faculty")){
+		e += "Non-exist member type";
+		throw e;	
+	}else if(!isName(set.m_n)){
+		e += "Member name with numbers";
+		throw e;	
+	}else if(!set.o.compare("B") && stoi(set.t) < 0){
+		e += "Negative time";
+		throw e;	
+	}
 }
 
 void library::resManager(string str, ofstream &ofs){
@@ -169,68 +204,73 @@ void library::resManager(string str, ofstream &ofs){
 void library::spcManager(string str, ofstream &ofs){
 	struct spset set;
 
-	readSpcSet(set, str);  
+	try{
+		readSpcSet(set, str);  
 
-	count += 1;
+		count += 1;
 
-	mem_add(set.m_t, set.m_n);
-	
-	spcReset(set.d);
-	if(check_8(set, count, ofs)) {}
-	else if(!(set.o).compare("B") && check_9(set, count, ofs)) {}
-	else if((set.o).compare("B") && check_10(set, count, ofs)) {}
-	else if(!(set.o).compare("B") && check_11(set, count, ofs)) {}
-	else if(!(set.o).compare("B") && check_12(set, count, ofs)) {}
-	else if(!(set.o).compare("B") && check_13(set, count, ofs)) {}
-	else if(!(set.o).compare("B") && check_14(set, count, ofs)) {}
-	else{
-		if(!(set.s_t).compare("StudyRoom")){
-			if(!(set.o).compare("B")){
-				if(!(set.m_t).compare("Undergraduate")){
-					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
-					(it->second)->borrowStudyRoom(stoi(set.s_n));
-				}
-				rooms.at(stoi(set.s_n) - 1)->borrowRoom(set.d, set.m_t, set.m_n, set.t);
-			}
-			else{
-				if(!(set.m_t).compare("Undergraduate")){
-					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
-					(it->second)->returnStudyRoom();
-				}
-				rooms.at(stoi(set.s_n) - 1)->returnRoom();
-			}
-		}
+		mem_add(set.m_t, set.m_n);
+		
+		spcReset(set.d);
+		if(check_8(set, count, ofs)) {}
+		else if(!(set.o).compare("B") && check_9(set, count, ofs)) {}
+		else if((set.o).compare("B") && check_10(set, count, ofs)) {}
+		else if(!(set.o).compare("B") && check_11(set, count, ofs)) {}
+		else if(!(set.o).compare("B") && check_12(set, count, ofs)) {}
+		else if(!(set.o).compare("B") && check_13(set, count, ofs)) {}
+		else if(!(set.o).compare("B") && check_14(set, count, ofs)) {}
 		else{
-			if(!(set.o).compare("B")){
-				if(!(set.m_t).compare("Undergraduate")){
-					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
-					uf[(stoi(set.s_n) - 1)].insert(pair<undergraduate*, seat*>(it->second, new seat(set.d, set.m_t, set.m_n, set.t)));
-					(it->second)->borrowSeat(stoi(set.s_n));
+			if(!(set.s_t).compare("StudyRoom")){
+				if(!(set.o).compare("B")){
+					if(!(set.m_t).compare("Undergraduate")){
+						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
+						(it->second)->borrowStudyRoom(stoi(set.s_n));
+					}
+					rooms.at(stoi(set.s_n) - 1)->borrowRoom(set.d, set.m_t, set.m_n, set.t);
 				}
-			}
-			else if(!(set.o).compare("E")){
-				if(!(set.m_t).compare("Undergraduate")){
-					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);	
-					uf[(stoi(set.s_n) - 1)].at(it->second)->empty(set.d);
-				}
-			}
-			else if(!(set.o).compare("C")){
-				if(!(set.m_t).compare("Undergraduate")){
-					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);	
-					uf[(stoi(set.s_n) - 1)].at(it->second)->comeback();
+				else{
+					if(!(set.m_t).compare("Undergraduate")){
+						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
+						(it->second)->returnStudyRoom();
+					}
+					rooms.at(stoi(set.s_n) - 1)->returnRoom();
 				}
 			}
 			else{
-				if(!(set.m_t).compare("Undergraduate")){
-					map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
-					delete uf[(stoi(set.s_n) - 1)].at(it->second);
-					uf[(stoi(set.s_n) - 1)].erase(it->second);
-					(it->second)->returnSeat();
+				if(!(set.o).compare("B")){
+					if(!(set.m_t).compare("Undergraduate")){
+						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
+						uf[(stoi(set.s_n) - 1)].insert(pair<undergraduate*, seat*>(it->second, new seat(set.d, set.m_t, set.m_n, set.t)));
+						(it->second)->borrowSeat(stoi(set.s_n));
+					}
+				}
+				else if(!(set.o).compare("E")){
+					if(!(set.m_t).compare("Undergraduate")){
+						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);	
+						uf[(stoi(set.s_n) - 1)].at(it->second)->empty(set.d);
+					}
+				}
+				else if(!(set.o).compare("C")){
+					if(!(set.m_t).compare("Undergraduate")){
+						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);	
+						uf[(stoi(set.s_n) - 1)].at(it->second)->comeback();
+					}
+				}
+				else{
+					if(!(set.m_t).compare("Undergraduate")){
+						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
+						delete uf[(stoi(set.s_n) - 1)].at(it->second);
+						uf[(stoi(set.s_n) - 1)].erase(it->second);
+						(it->second)->returnSeat();
+					}
 				}
 			}
-		}
 
-		ofs << count << "\t0\tSuccess." << endl;
+			ofs << count << "\t0\tSuccess." << endl;
+		}
+	}catch(string &e){
+		count += 1;
+		ofs << count << e << endl;
 	}
 }
 
