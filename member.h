@@ -22,7 +22,8 @@ class member{
 		int limit;								// The amount of resources a user can borrow.
 		int studyRoom_no;
 		int seatFloor;
-		
+		int memory;
+
 	public:
 		member(std::string);
 		void setPaneltyDate(date);
@@ -42,6 +43,9 @@ class member{
 		int retStudyRoom();
 		int retSeat();
 
+		void memSub(int);
+		void memAdd(int);
+		bool memOver(int);
 };
 
 class undergraduate : public member{

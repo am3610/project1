@@ -1,6 +1,7 @@
 #ifndef _LIBRARY_H
 #define _LIBRARY_H
 #include <string>
+#include <set>
 #include <map>
 #include <fstream>
 #include <vector>
@@ -35,6 +36,8 @@ class library{
 
 		std::map<std::string, undergraduate*> undergraduates;
 		std::map<std::string, book*> books;
+		std::map<std::string, ebook*> ebooks;
+
 		std::map<undergraduate*, seat*> uf[3]; 
 		std::vector<studyRoom*> rooms;
 		
@@ -42,7 +45,6 @@ class library{
 		void spcManager(std::string, std::ofstream&);
 
 		void mem_add(std::string, std::string);
-
 		bool check_1(struct opset, const int, std::ofstream&);
 		bool check_2(struct opset, const int, std::ofstream&);
 		bool check_3(struct opset, const int, std::ofstream&);

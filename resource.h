@@ -11,21 +11,37 @@ class resource{
 		undergraduate *u_borrower;
 
 	public:
-		resource(std::string title);
-		void setBorrowDate(std::string borrowDate);
+		resource(std::string);
+		void setBorrowDate(std::string);
 		std::string getBorrowDate();
 		std::string getTitle();
 
-		void setUndergraduate(undergraduate *ug);
+		void setUndergraduate(undergraduate*);
 		void freeUndergraduate();
 		int isOccupied();
-		bool isLate(const std::string &retDate, const std::string &mType, 
-				std::string &tmp);
+		bool isLate(const std::string&, const std::string&, std::string&);
 };
 
 class book : public resource{
 	public:
-		book(std::string title);
+		book(std::string);
+};
+
+class magazine : public resource{
+	private:
+
+	public:
+		magazine(std::string);
+
+};
+
+class ebook : public resource{
+	private:
+		int size;
+
+	public:
+		ebook(std::string, int);
+		int getSize();
 };
 
 #endif

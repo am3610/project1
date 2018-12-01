@@ -45,7 +45,15 @@ bool member::isExist(string type, string title){
 
 bool member::isOver(){
 	bool ret;
-	if(info.size() < limit) ret = false;
+	int cnt = 0;
+
+	for(auto i : info){
+		if((i->type).compare("E-book")){
+			cnt += 1;
+		}
+	}
+
+	if(cnt < limit) ret = false;
 	else ret = true;
 	return ret;
 }
@@ -90,7 +98,24 @@ int member::retSeat(){
 	return seatFloor;
 }
 
+void member::memSub(int size){
+	memory -= size;
+}
+
+void member::memAdd(int size){
+	memory += size;
+}
+
+bool member::memOver(int size){
+	bool ret = false;
+	if(memory - size < 0){
+		ret = true;
+	}
+	return ret;
+}
+
 undergraduate::undergraduate(string name) : member(name){
 	limit = 1;
+	memory = 100;
 }
 

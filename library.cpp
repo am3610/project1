@@ -14,6 +14,31 @@
 
 using namespace std;
 
+static pair<string, int> parseTitle(string title){
+	string t;
+	string n;
+	bool f = false;
+	for(auto s : title){
+		if(!f){
+			if(s == '['){
+				f = true;
+				continue;
+			}
+			
+			t.push_back(s);
+
+		}else{
+			if(s == ']'){
+				break;
+			}
+
+			n.push_back(s);
+		}
+	}
+
+	return make_pair(t, stoi(n));
+}
+
 library::library(char** argv){
 	count = 0;
 
@@ -32,6 +57,11 @@ library::library(char** argv){
 		ss >> t >> n;
 		if(!t.compare("Book")){
 			books.insert(pair<string, book*>(n, new book(n)));
+		}else if(!t.compare("Magazine")){
+			magazines.insert(n);
+		}else if(!t.compare("E-book")){
+			pair<string, int> p = parseTitle(n);
+			ebooks.insert(pair<string, ebook*>(p.first, new ebook(p.first, p.second)));
 		}
 		getline(ifs, str);
 	}
@@ -223,6 +253,18 @@ bool library::check_1(struct opset op, const int count, ofstream &ofs){
 	if(!(op.r_t).compare("Book")){
 		map<string, book*>::iterator it = books.find(op.r_n);
 		if(it == books.end()){
+			ofs << count << "\t1\tNon exist resource." << endl;
+			ret = true;
+		}
+	}/*else if(!(op.r_t).compare("Magazine")){
+		set<string>::iterator it = megazines.find(op.r_n);
+		if(it == magazines.end()){
+			ofs << count << "\t1\tNon exist resource." << endl;
+			ret = true;
+		}
+	}*/else if(!(op.r_t).compare("E-book")){
+		map<string, ebook*>::iterator it = ebooks.find(op.r_n);
+		if(it == ebooks.end()){
 			ofs << count << "\t1\tNon exist resource." << endl;
 			ret = true;
 		}
