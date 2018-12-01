@@ -60,3 +60,11 @@ book::book(string title) : resource(title){
 	u_borrower = NULL;
 }
 
+ebook::ebook(string title, int size) : resource(title){
+	this->size = size;
+}
+
+int ebook::getSize(){
+	return size;
+}
+

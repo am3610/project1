@@ -20,17 +20,21 @@ class member{
 		date paneltyDate;						// Restricted date
 		std::vector<struct resInfo*> info;		// Information about resources borrowed by the user.
 		int limit;								// The amount of resources a user can borrow.
-		
-	public:
-		member(std::string name);
-		void setPaneltyDate(date paneltyDate);
+		int memory;
 
-		void addInfo(std::string type, std::string title);
-		void eraseInfo(std::string type, std::string title);
-		bool isExist(std::string type, std::string title);
+	public:
+		member(std::string);
+		void setPaneltyDate(date);
+
+		void addInfo(std::string, std::string);
+		void eraseInfo(std::string, std::string);
+		bool isExist(std::string, std::string);
 		bool isOver();
 		int getLimit();
-		bool isRestricted(const std::string &borrDate, std::string &tmp);
+		bool isRestricted(const std::string&, std::string&);
+		void memSub(int);
+		void memAdd(int);
+		bool memOver(int);
 };
 
 class undergraduate : public member{
