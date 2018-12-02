@@ -225,12 +225,25 @@ void library::spcManager(string str, ofstream &ofs){
 					if(!(set.m_t).compare("Undergraduate")){
 						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
 						(it->second)->borrowStudyRoom(stoi(set.s_n));
+					}else if(!(set.m_t).compare("Graduate")){
+						map<string, graduate*>::iterator it = graduates.find(set.m_n);
+						(it->second)->borrowStudyRoom(stoi(set.s_n));
+					}else if(!(set.m_t).compare("Faculty")){
+						map<string, faculty*>::iterator it = faculties.find(set.m_n);
+						(it->second)->borrowStudyRoom(stoi(set.s_n));
 					}
+
 					rooms.at(stoi(set.s_n) - 1)->borrowRoom(set.d, set.m_t, set.m_n, set.t);
 				}
 				else{
 					if(!(set.m_t).compare("Undergraduate")){
 						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
+						(it->second)->returnStudyRoom();
+					}else if(!(set.m_t).compare("Graduate")){
+						map<string, graduate*>::iterator it = graduates.find(set.m_n);
+						(it->second)->returnStudyRoom();
+					}else if(!(set.m_t).compare("Faculty")){
+						map<string, faculty*>::iterator it = faculties.find(set.m_n);
 						(it->second)->returnStudyRoom();
 					}
 					rooms.at(stoi(set.s_n) - 1)->returnRoom();
@@ -242,19 +255,42 @@ void library::spcManager(string str, ofstream &ofs){
 						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);
 						uf[(stoi(set.s_n) - 1)].insert(pair<undergraduate*, seat*>(it->second, new seat(set.d, set.m_t, set.m_n, set.t)));
 						(it->second)->borrowSeat(stoi(set.s_n));
+					}else if(!(set.m_t).compare("Graduate")){
+						map<string, graduate*>::iterator it = graduates.find(set.m_n);
+						gf[(stoi(set.s_n) - 1)].insert(pair<graduate*, seat*>(it->second, new seat(set.d, set.m_t, set.m_n, set.t)));
+						(it->second)->borrowSeat(stoi(set.s_n));
+					}else if(!(set.m_t).compare("Faculty")){
+						map<string, faculty*>::iterator it = faculties.find(set.m_n);
+						ff[(stoi(set.s_n) - 1)].insert(pair<faculty*, seat*>(it->second, new seat(set.d, set.m_t, set.m_n, set.t)));
+						(it->second)->borrowSeat(stoi(set.s_n));
 					}
+
 				}
 				else if(!(set.o).compare("E")){
 					if(!(set.m_t).compare("Undergraduate")){
 						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);	
 						uf[(stoi(set.s_n) - 1)].at(it->second)->empty(set.d);
+					}else if(!(set.m_t).compare("Graduate")){
+						map<string, graduate*>::iterator it = graduates.find(set.m_n);
+						gf[(stoi(set.s_n) - 1)].at(it->second)->empty(set.d);
+					}else if(!(set.m_t).compare("Faculty")){
+						map<string, faculty*>::iterator it = faculties.find(set.m_n);
+						ff[(stoi(set.s_n) - 1)].at(it->second)->empty(set.d);
 					}
+
 				}
 				else if(!(set.o).compare("C")){
 					if(!(set.m_t).compare("Undergraduate")){
 						map<string, undergraduate*>::iterator it = undergraduates.find(set.m_n);	
 						uf[(stoi(set.s_n) - 1)].at(it->second)->comeback();
+					}else if(!(set.m_t).compare("Graduate")){
+						map<string, graduate*>::iterator it = graduates.find(set.m_n);
+						gf[(stoi(set.s_n) - 1)].at(it->second)->comeback();
+					}else if(!(set.m_t).compare("Faculty")){
+						map<string, faculty*>::iterator it = faculties.find(set.m_n);
+						ff[(stoi(set.s_n) - 1)].at(it->second)->comeback();
 					}
+
 				}
 				else{
 					if(!(set.m_t).compare("Undergraduate")){
@@ -262,10 +298,19 @@ void library::spcManager(string str, ofstream &ofs){
 						delete uf[(stoi(set.s_n) - 1)].at(it->second);
 						uf[(stoi(set.s_n) - 1)].erase(it->second);
 						(it->second)->returnSeat();
+					}else if(!(set.m_t).compare("Graduate")){
+						map<string, graduate*>::iterator it = graduates.find(set.m_n);
+						delete gf[(stoi(set.s_n) - 1)].at(it->second);
+						gf[(stoi(set.s_n) - 1)].erase(it->second);
+						(it->second)->returnSeat();
+					}else if(!(set.m_t).compare("Faculty")){
+						map<string, faculty*>::iterator it = faculties.find(set.m_n);
+						delete ff[(stoi(set.s_n) - 1)].at(it->second);
+						ff[(stoi(set.s_n) - 1)].erase(it->second);
+						(it->second)->returnSeat();
 					}
 				}
 			}
-
 			ofs << count << "\t0\tSuccess." << endl;
 		}
 	}catch(string &e){
@@ -748,7 +793,28 @@ bool library::check_10(struct spset sp, const int count, ofstream &ofs){
 		if(!(sp.s_t).compare("Seat") && (it->second)->retSeat() != stoi(sp.s_n)){
 			ret = true;
 		}
+	}else if(!(sp.m_t).compare("Graduate")){
+		map<string, graduate*>::iterator it = graduates.find(sp.m_n);
+		
+		if(!(sp.s_t).compare("StudyRoom") && (it->second)->retStudyRoom() != stoi(sp.s_n)){
+			ret = true;
+		}
+		
+		if(!(sp.s_t).compare("Seat") && (it->second)->retSeat() != stoi(sp.s_n)){
+			ret = true;
+		}
+	}else if(!(sp.m_t).compare("Faculty")){
+		map<string, faculty*>::iterator it = faculties.find(sp.m_n);
+		
+		if(!(sp.s_t).compare("StudyRoom") && (it->second)->retStudyRoom() != stoi(sp.s_n)){
+			ret = true;
+		}
+		
+		if(!(sp.s_t).compare("Seat") && (it->second)->retSeat() != stoi(sp.s_n)){
+			ret = true;
+		}
 	}
+
 
 	if(ret){
 		ofs << count << "\t10\tYou did not borrow this space." << endl;
@@ -762,6 +828,26 @@ bool library::check_11(struct spset sp, const int count, ofstream &ofs){
 
 	if(!(sp.m_t).compare("Undergraduate")){
 		map<string, undergraduate*>::iterator it = undergraduates.find(sp.m_n);
+		
+		if(!(sp.s_t).compare("StudyRoom") && (it->second)->retStudyRoom() != 0){
+			ret = true;
+		}
+		
+		if(!(sp.s_t).compare("Seat") && (it->second)->retSeat() != 0){
+			ret = true;
+		}
+	}else if(!(sp.m_t).compare("Graduate")){
+		map<string, graduate*>::iterator it = graduates.find(sp.m_n);
+		
+		if(!(sp.s_t).compare("StudyRoom") && (it->second)->retStudyRoom() != 0){
+			ret = true;
+		}
+		
+		if(!(sp.s_t).compare("Seat") && (it->second)->retSeat() != 0){
+			ret = true;
+		}
+	}else if(!(sp.m_t).compare("Faculty")){
+		map<string, faculty*>::iterator it = faculties.find(sp.m_n);
 		
 		if(!(sp.s_t).compare("StudyRoom") && (it->second)->retStudyRoom() != 0){
 			ret = true;
@@ -803,7 +889,7 @@ bool library::check_12(struct spset sp, const int count, ofstream &ofs){
 bool library::check_13(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
 
-	if(!(sp.s_t).compare("StudyRoom")){
+	/*if(!(sp.s_t).compare("StudyRoom")){
 		if(stoi(sp.t) > 3){
 			ret = true;
 		}
@@ -815,6 +901,10 @@ bool library::check_13(struct spset sp, const int count, ofstream &ofs){
 				ret = true;
 			}
 		}
+	}*/
+
+	if(stoi(sp.t) > 3){
+		ret = true;
 	}
 
 	if(ret){
@@ -857,8 +947,18 @@ bool library::check_14(struct spset sp, const int count, ofstream &ofs){
 
 		int h = tl[idx];
 
-		if(uf[idx].size() == 50){
+		if(uf[idx].size() + gf[idx].size() + ff[idx].size() == 50){
 			for(auto it = uf[idx].begin(); it != uf[idx].end(); it++){
+				h_date hour((it->second)->getTime());
+				int t = hour.getHour() + (it->second)->getDuring();
+				h = min(h, t);
+			}
+			for(auto it = gf[idx].begin(); it != gf[idx].end(); it++){
+				h_date hour((it->second)->getTime());
+				int t = hour.getHour() + (it->second)->getDuring();
+				h = min(h, t);
+			}
+			for(auto it = ff[idx].begin(); it != ff[idx].end(); it++){
 				h_date hour((it->second)->getTime());
 				int t = hour.getHour() + (it->second)->getDuring();
 				h = min(h, t);
@@ -896,6 +996,12 @@ void library::spcReset(string d){
 		if(base - comp > 0 || base.getHour() >= 18 ||  base.getHour() - comp.getHour() >= it->getDuring()){
 			if(!(it->getMemType()).compare("Undergraduate")){
 				map<string, undergraduate*>::iterator ut = undergraduates.find(it->getMemName());
+				(ut->second)->returnStudyRoom();
+			}else if(!(it->getMemType()).compare("Graduate")){
+				map<string, graduate*>::iterator ut = graduates.find(it->getMemName());
+				(ut->second)->returnStudyRoom();
+			}else if(!(it->getMemType()).compare("Faculty")){
+				map<string, faculty*>::iterator ut = faculties.find(it->getMemName());
 				(ut->second)->returnStudyRoom();
 			}
 			it->returnRoom();
@@ -959,6 +1065,42 @@ void library::spcReset(string d){
 				(it->first)->returnSeat();
 				delete it->second;
 				uf[i].erase(it++);
+
+			}
+			else{
+				++it;
+			}
+		}
+
+		for(auto it = gf[i].begin(); it != gf[i].end();){
+			h_date comp((it->second)->getTime());
+			if(base - comp > 0 || base.getHour() >= tl[i] ||  base.getHour() - comp.getHour() >= (it->second)->getDuring()){
+				(it->first)->returnSeat();
+				delete it->second;
+				gf[i].erase(it++);
+			}
+			else if((it->second)->getStatus() == EMPTY && base.getHour() - (it->second)->getEtime() >= 1){
+				(it->first)->returnSeat();
+				delete it->second;
+				gf[i].erase(it++);
+
+			}
+			else{
+				++it;
+			}
+		}
+
+		for(auto it = ff[i].begin(); it != ff[i].end();){
+			h_date comp((it->second)->getTime());
+			if(base - comp > 0 || base.getHour() >= tl[i] ||  base.getHour() - comp.getHour() >= (it->second)->getDuring()){
+				(it->first)->returnSeat();
+				delete it->second;
+				ff[i].erase(it++);
+			}
+			else if((it->second)->getStatus() == EMPTY && base.getHour() - (it->second)->getEtime() >= 1){
+				(it->first)->returnSeat();
+				delete it->second;
+				ff[i].erase(it++);
 
 			}
 			else{

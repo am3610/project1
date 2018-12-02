@@ -45,6 +45,8 @@ class library{
 		std::map<std::string, seat*> f2; 
 		std::map<std::string, seat*> f3;
 		std::map<undergraduate*, seat*> uf[3]; 
+		std::map<graduate*, seat*> gf[3]; 
+		std::map<faculty*, seat*> ff[3]; 
 		std::vector<studyRoom*> rooms;
 		
 		void resManager(std::string, std::ofstream&);
