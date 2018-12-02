@@ -1,7 +1,12 @@
 # Simple Library Management (SLM)
 
-SLM is a program to **manage data of resources and members** for library.
-**Space Management** is added in new version (v 1.1).
+SLM is a program to **manage data of resources and members** for library. (v 1.0)
+
+**Space Management** is added in new version. (v 1.1)
+
+**Memeber type** is added. (v 1.2)
+
+
 
 # Building SLM
 
@@ -26,6 +31,7 @@ make
 	* mem_add		: Add new member to undergraduates map.
 	* check_1 ~ 7	: Check each fail case. (for resource)
 	* check 8 ~ 14	: Check each fail case. (for space)(v 1.1)
+	* check 15 ~ 16	: Check each fail case. (for resource)(v 1.2)
 	* borrowRes		: Borrow a resource.
 	* returnRes		: Return a resource.
 
