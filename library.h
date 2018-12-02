@@ -32,6 +32,7 @@ class library{
 		bool check_5(struct opset, const int, std::ofstream&);
 		bool check_6(struct opset, const int, std::ofstream&);
 		bool check_7(struct opset, const int, std::ofstream&);
+		bool check_15(struct opset, const int, std::ofstream&);
 
 		void borrowRes(struct opset);
 		void returnRes(struct opset);

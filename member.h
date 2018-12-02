@@ -7,10 +7,12 @@
 struct resInfo{
 	std::string type;
 	std::string title;
+	std::string date;
 
-	resInfo(std::string type, std::string title){
+	resInfo(std::string type, std::string title, std::string date){
 		this->type = type;
 		this->title = title;
+		this->date = date;
 	}
 };
 
@@ -26,9 +28,10 @@ class member{
 		member(std::string);
 		void setPaneltyDate(date);
 
-		void addInfo(std::string, std::string);
+		void addInfo(std::string, std::string, std::string);
 		void eraseInfo(std::string, std::string);
 		bool isExist(std::string, std::string);
+		bool isExist(std::string, std::string, std::string&);
 		bool isOver();
 		int getLimit();
 		bool isRestricted(const std::string&, std::string&);
