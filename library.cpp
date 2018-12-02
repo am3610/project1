@@ -84,6 +84,7 @@ void library::execute(char *inp){
 		else if(!(set.o).compare("B") && check_6(set, count, ofs)) {readSet(set, ifs); continue;}
 		else if(!(set.o).compare("R") && check_7(set, count, ofs)) {readSet(set, ifs); continue;}
 		else if(!(set.o).compare("B") && check_15(set, count, ofs)) {readSet(set, ifs); continue;}
+		else if(!(set.o).compare("B") && check_16(set, count, ofs)) {readSet(set, ifs); continue;}
 		else{
 			if(!(set.o).compare("B")){
 				borrowRes(set);
@@ -357,6 +358,26 @@ bool library::check_15(struct opset op, const int count, ofstream &ofs){
 		}
 
 	}
+	return ret;
+}
+
+bool library::check_16(struct opset op, const int count, ofstream &ofs){
+	bool ret = false;
+
+	if(!(op.m_t).compare("Graduate")){
+		map<string, graduate*>::iterator it = graduates.find(op.m_n);
+		if((it->second)->isLate(op.d)){
+			ofs << count << "\t16\tPreviously borrowed books are overdue, so borrow is limited." << endl;
+			ret = true;
+		}
+	}else if(!(op.m_t).compare("Faculty")){
+		map<string, faculty*>::iterator it = faculties.find(op.m_n);
+		if((it->second)->isLate(op.d)){
+			ofs << count << "\t16\tPreviously borrowed books are overdue, so borrow is limited." << endl;
+			ret = true;
+		}
+	}
+
 	return ret;
 }
 
