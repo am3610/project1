@@ -18,8 +18,8 @@ void member::setPaneltyDate(date paneltyDate){
 	}
 }
 
-void member::addInfo(string type, string title){
-	info.push_back(new struct resInfo(type, title));
+void member::addInfo(string type, string title, string date){
+	info.push_back(new struct resInfo(type, title, date));
 }
 
 void member::eraseInfo(string type, string title){
@@ -36,6 +36,18 @@ bool member::isExist(string type, string title){
 	bool ret = false;
 	for(auto i : info){
 		if(!type.compare(i->type) && !title.compare(i->title)){
+			ret = true;
+			break;
+		}
+	}
+	return ret;
+}
+
+bool member::isExist(string type, string title, string &tmp){
+	bool ret = false;
+	for(auto i : info){
+		if(!type.compare(i->type) && !title.compare(i->title)){
+			tmp = i->date;
 			ret = true;
 			break;
 		}
@@ -118,4 +130,5 @@ undergraduate::undergraduate(string name) : member(name){
 	limit = 1;
 	memory = 100;
 }
+
 

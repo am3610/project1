@@ -151,6 +151,7 @@ void library::resManager(string str, ofstream &ofs){
 	else if(!(set.o).compare("B") && check_5(set, count, ofs)) {}
 	else if(!(set.o).compare("B") && check_6(set, count, ofs)) {}
 	else if(!(set.o).compare("R") && check_7(set, count, ofs)) {}
+	else if(!(set.o).compare("B") && check_15(set, count, ofs)) {}
 	else{
 		if(!(set.o).compare("B")){
 			borrowRes(set);
@@ -303,13 +304,12 @@ bool library::check_4(struct opset op, const int count, ofstream &ofs){
 	bool ret = false;
 	if(!(op.m_t).compare("Undergraduate")){
 		map<string, undergraduate*>::iterator it = undergraduates.find(op.m_n);
-		if((it->second)->isExist(op.r_t, op.r_n)){
-			if(!(op.r_t).compare("Book")){
-				map<string, book*>::iterator bt = books.find(op.r_n);
-				ofs << count << "\t4\tYou already borrowed this book at" 
-					<< (bt->second)->getBorrowDate() << endl;
-				ret = true;
-			}
+
+		string tmp;
+		if((it->second)->isExist(op.r_t, op.r_n, tmp)){
+			ofs << count << "\t4\tYou already borrowed this book at " 
+				<< tmp << endl;
+			ret = true;
 		}
 	}
 	return ret;
@@ -363,15 +363,35 @@ bool library::check_7(struct opset op, const int count, ofstream &ofs){
 	return ret;
 }
 
+bool library::check_15(struct opset op, const int count, ofstream &ofs){
+	bool ret = false;
+
+	if(!(op.r_t).compare("E-book")){
+		map<string, ebook*>::iterator rt = ebooks.find(op.r_n);
+		if(!(op.m_t).compare("Undergraduate")){
+			map<string, undergraduate*>::iterator it = undergraduates.find(op.m_n);
+
+			if((it->second)->memOver((rt->second)->getSize())){
+				ofs << count << "\t15\tExceeds your storage capacity." << endl;
+				ret = true;
+			}
+		}
+	}
+	return ret;
+}
+
 void library::borrowRes(struct opset op){
 	if(!(op.m_t).compare("Undergraduate")){
 		map<string, undergraduate*>::iterator mt = undergraduates.find(op.m_n);
-		(mt->second)->addInfo(op.r_t, op.r_n);
+		(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 
 		if(!(op.r_t).compare("Book")){
 			map<string, book*>::iterator rt = books.find(op.r_n);
 			(rt->second)->setUndergraduate(mt->second);
 			(rt->second)->setBorrowDate(op.d);
+		}else if(!(op.r_t).compare("E-book")){
+			map<string, ebook*>::iterator rt = ebooks.find(op.r_n);
+			(mt->second)->memSub((rt->second)->getSize());
 		}
 	}
 }
@@ -384,6 +404,9 @@ void library::returnRes(struct opset op){
 		if(!(op.r_t).compare("Book")){
 			map<string, book*>::iterator rt = books.find(op.r_n);
 			(rt->second)->freeUndergraduate();
+		}else if(!(op.r_t).compare("E-book")){
+			map<string, ebook*>::iterator rt = ebooks.find(op.r_n);
+			(mt->second)->memAdd((rt->second)->getSize());
 		}
 	}
 }
