@@ -20,6 +20,8 @@ struct opset{
 class library{
 	private:
 		std::map<std::string, undergraduate*> undergraduates;
+		std::map<std::string, graduate*> graduates;
+		std::map<std::string, faculty*> faculties;
 		std::map<std::string, book*> books;
 		std::map<std::string, ebook*> ebooks;
 		std::map<std::string, std::map<std::string, magazine*> > magazines;

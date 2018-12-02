@@ -105,4 +105,12 @@ undergraduate::undergraduate(string name) : member(name){
 	memory = 100;
 }
 
+graduate::graduate(string name) : member(name){
+	limit = 5;
+	memory = 500;
+}
 
+faculty::faculty(string name) : member(name){
+	limit = 10;
+	memory = 1000;
+}
