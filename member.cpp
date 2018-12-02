@@ -126,6 +126,19 @@ bool member::memOver(int size){
 	return ret;
 }
 
+bool member::isLate(string Date){
+	bool ret = false;
+	date c(Date);
+	for(auto i : info){
+		date d(i->date);
+		if(c - d > 29){
+			ret = true;
+			break;
+		}
+	}
+	return ret;
+}
+
 undergraduate::undergraduate(string name) : member(name){
 	limit = 1;
 	memory = 100;

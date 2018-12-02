@@ -49,6 +49,7 @@ class member{
 		void memSub(int);
 		void memAdd(int);
 		bool memOver(int);
+		bool isLate(std::string);
 };
 
 class undergraduate : public member{
