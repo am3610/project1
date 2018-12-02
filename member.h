@@ -57,4 +57,15 @@ class undergraduate : public member{
 		undergraduate(std::string name);
 };
 
+class graduate : public member{
+
+	public:
+		graduate(std::string name);
+};
+
+class faculty : public member{
+
+	public:
+		faculty(std::string name);
+};
 #endif

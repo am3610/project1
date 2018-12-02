@@ -9,6 +9,8 @@ class resource{
 		std::string title;
 		date borrowDate;
 		undergraduate *u_borrower;
+		graduate *g_borrower;
+		faculty *f_borrower;
 
 	public:
 		resource(std::string);
@@ -17,8 +19,12 @@ class resource{
 		std::string getTitle();
 
 		void setUndergraduate(undergraduate*);
+		void setGraduate(graduate*);
+		void setFaculty(faculty*);
 		void freeUndergraduate();
-		bool isOccupied();
+		void freeGraduate();
+		void freeFaculty();
+		int isOccupied();
 		bool isLate(const std::string&, const std::string&, std::string&);
 };
 
