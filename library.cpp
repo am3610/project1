@@ -5,7 +5,7 @@
 
 using namespace std;
 
-static pair<string, int> parseTitle(string title){
+static pair<string, string> parseTitle(string title){
 	string t;
 	string n;
 	bool f = false;
@@ -27,7 +27,7 @@ static pair<string, int> parseTitle(string title){
 		}
 	}
 
-	return make_pair(t, stoi(n));
+	return make_pair(t, n);
 }
 
 library::library(char* res){
@@ -43,10 +43,11 @@ library::library(char* res){
 		if(!t.compare("Book")){
 			books.insert(pair<string, book*>(n, new book(n)));
 		}else if(!t.compare("Magazine")){
-			magazines.insert(n);
+			map<string, magazine*>* mag = new map<string, magazine*>();
+			magazines.emplace(n, *mag);
 		}else if(!t.compare("E-book")){
-			pair<string, int> p = parseTitle(n);
-			ebooks.insert(pair<string, ebook*>(p.first, new ebook(p.first, p.second)));
+			pair<string, string> p = parseTitle(n);
+			ebooks.insert(pair<string, ebook*>(p.first, new ebook(p.first, stoi(p.second))));
 		}
 		getline(ifs, str);
 	}
@@ -75,7 +76,7 @@ void library::execute(char *inp){
 	while(!ifs.eof()){
 		count += 1;
 		mem_add(set.m_t, set.m_n);
-		if(!(set.o).compare("B") && check_1(set, count, ofs)) {readSet(set, ifs); continue;}
+		if(check_1(set, count, ofs)) {readSet(set, ifs); continue;}
 		else if(!(set.o).compare("B") && check_2(set, count, ofs)) {readSet(set, ifs); continue;}
 		else if(!(set.o).compare("R") && check_3(set, count, ofs)) {readSet(set, ifs); continue;}
 		else if(!(set.o).compare("B") && check_4(set, count, ofs)) {readSet(set, ifs); continue;}
@@ -115,13 +116,20 @@ bool library::check_1(struct opset op, const int count, ofstream &ofs){
 			ofs << count << "\t1\tNon exist resource." << endl;
 			ret = true;
 		}
-	}/*else if(!(op.r_t).compare("Magazine")){
-		set<string>::iterator it = megazines.find(op.r_n);
+	}else if(!(op.r_t).compare("Magazine")){
+		pair<string, string> p = parseTitle(op.r_n);
+		map<string, map<string, magazine*> >::iterator it = magazines.find(p.first);
+		date c(p.second);
+		date d(op.d);
+
 		if(it == magazines.end()){
 			ofs << count << "\t1\tNon exist resource." << endl;
 			ret = true;
+		}else if(!(op.o).compare("B") && (d - c < 0 || d - c > 360)){
+			ofs << count << "\t1\tNon exist resource." << endl;
+			ret = true;
 		}
-	}*/else if(!(op.r_t).compare("E-book")){
+	}else if(!(op.r_t).compare("E-book")){
 		map<string, ebook*>::iterator it = ebooks.find(op.r_n);
 		if(it == ebooks.end()){
 			ofs << count << "\t1\tNon exist resource." << endl;
@@ -177,7 +185,19 @@ bool library::check_5(struct opset op, const int count, ofstream &ofs){
 	bool ret = false;
 	if(!(op.r_t).compare("Book")){
 		map<string, book*>::iterator it = books.find(op.r_n);
-		if((it->second)->isOccupied() == 1){
+		if((it->second)->isOccupied()){
+			date tmp((it->second)->getBorrowDate());
+			tmp = tmp + 13;
+			ofs << count << 
+				"\t5\tOther member already borrowed this book. This book will be returned at " 
+				<< tmp.getDate() << endl;
+			ret = true;
+		}
+	}else if(!(op.r_t).compare("Magazine")){
+		pair<string, string> p = parseTitle(op.r_n);
+		map<string, map<string, magazine*> >::iterator rt = magazines.find(p.first);
+		map<string, magazine*>::iterator it = (rt->second).find(op.r_n);
+		if(it != (rt->second).end() && (it->second)->isOccupied()){
 			date tmp((it->second)->getBorrowDate());
 			tmp = tmp + 13;
 			ofs << count << 
@@ -247,6 +267,16 @@ void library::borrowRes(struct opset op){
 			map<string, book*>::iterator rt = books.find(op.r_n);
 			(rt->second)->setUndergraduate(mt->second);
 			(rt->second)->setBorrowDate(op.d);
+		}else if(!(op.r_t).compare("Magazine")){
+			pair<string, string> p = parseTitle(op.r_n);
+			map<string, map<string, magazine*> >::iterator it = magazines.find(p.first);
+			map<string, magazine*>::iterator rt = (it->second).find(op.r_n);
+			if(rt == (it->second).end()){
+				(it->second).insert(rt, pair<string, magazine*>(op.r_n, new magazine(op.r_n)));	
+				rt = (it->second).find(op.r_n);
+			}
+			(rt->second)->setUndergraduate(mt->second);
+			(rt->second)->setBorrowDate(op.d);
 		}else if(!(op.r_t).compare("E-book")){
 			map<string, ebook*>::iterator rt = ebooks.find(op.r_n);
 			(mt->second)->memSub((rt->second)->getSize());
@@ -261,6 +291,11 @@ void library::returnRes(struct opset op){
 
 		if(!(op.r_t).compare("Book")){
 			map<string, book*>::iterator rt = books.find(op.r_n);
+			(rt->second)->freeUndergraduate();
+		}else if(!(op.r_t).compare("Magazine")){
+			pair<string, string> p = parseTitle(op.r_n);
+			map<string, map<string, magazine*> >::iterator it = magazines.find(p.first);
+			map<string, magazine*>::iterator rt = (it->second).find(op.r_n);
 			(rt->second)->freeUndergraduate();
 		}else if(!(op.r_t).compare("E-book")){
 			map<string, ebook*>::iterator rt = ebooks.find(op.r_n);

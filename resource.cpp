@@ -27,10 +27,10 @@ void resource::freeUndergraduate(){
 	u_borrower = NULL;
 }
 
-int resource::isOccupied(){
-	int ret = 0;
+bool resource::isOccupied(){
+	int ret = false;
 	if(u_borrower != NULL){
-		ret = 1;
+		ret = true;
 	}
 
 	return ret;
@@ -57,6 +57,10 @@ bool resource::isLate(const string &retDate, const string &mType,
 }
 
 book::book(string title) : resource(title){
+	u_borrower = NULL;
+}
+
+magazine::magazine(string title) : resource(title){
 	u_borrower = NULL;
 }
 

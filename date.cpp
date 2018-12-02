@@ -31,9 +31,15 @@ date::date(string d){
 	}
 	buf.push_back(stoi(tmp));
 
-	year = buf.at(0);
-	month = buf.at(1);
-	day = buf.at(2);
+	if(buf.size() == 2){
+		year = buf.at(0);
+		month = buf.at(1);
+		day = 0;
+	}else{
+		year = buf.at(0);
+		month = buf.at(1);
+		day = buf.at(2);
+	}
 }
 
 

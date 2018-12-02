@@ -22,7 +22,7 @@ class library{
 		std::map<std::string, undergraduate*> undergraduates;
 		std::map<std::string, book*> books;
 		std::map<std::string, ebook*> ebooks;
-		std::set<std::string> magazines;
+		std::map<std::string, std::map<std::string, magazine*> > magazines;
 		
 		void mem_add(std::string, std::string);
 		bool check_1(struct opset, const int, std::ofstream&);
