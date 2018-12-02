@@ -37,6 +37,7 @@ class library{
 		std::map<std::string, undergraduate*> undergraduates;
 		std::map<std::string, book*> books;
 		std::map<std::string, ebook*> ebooks;
+		std::map<std::string, std::map<std::string, magazine*> > magazines;
 
 		std::map<undergraduate*, seat*> uf[3]; 
 		std::vector<studyRoom*> rooms;

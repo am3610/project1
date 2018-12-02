@@ -18,7 +18,7 @@ class resource{
 
 		void setUndergraduate(undergraduate*);
 		void freeUndergraduate();
-		int isOccupied();
+		bool isOccupied();
 		bool isLate(const std::string&, const std::string&, std::string&);
 };
 
@@ -28,8 +28,6 @@ class book : public resource{
 };
 
 class magazine : public resource{
-	private:
-
 	public:
 		magazine(std::string);
 
