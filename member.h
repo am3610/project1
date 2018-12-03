@@ -8,11 +8,19 @@ struct resInfo{
 	std::string type;
 	std::string title;
 	std::string date;
+	int size;
 
 	resInfo(std::string type, std::string title, std::string date){
 		this->type = type;
 		this->title = title;
 		this->date = date;
+	}
+
+	resInfo(std::string type, std::string title, std::string date, int size){
+		this->type = type;
+		this->title = title;
+		this->date = date;
+		this->size = size;
 	}
 };
 
@@ -25,12 +33,14 @@ class member{
 		int memory;
 		int studyRoom_no;
 		int seatFloor;
+		int during;
 		
 	public:
 		member(std::string);
 		void setPaneltyDate(date);
 
 		void addInfo(std::string, std::string, std::string);
+		void addInfo(std::string, std::string, std::string, int);
 		void eraseInfo(std::string, std::string);
 		bool isExist(std::string, std::string);
 		bool isExist(std::string, std::string, std::string&);
@@ -40,6 +50,7 @@ class member{
 		void memSub(int);
 		void memAdd(int);
 		bool memOver(int);
+		void expireEbook(std::string);
 		bool isLate(std::string);
 
 		void borrowStudyRoom(int);

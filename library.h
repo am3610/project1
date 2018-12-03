@@ -52,7 +52,7 @@ class library{
 		void resManager(std::string, std::ofstream&);
 		void spcManager(std::string, std::ofstream&);
 
-		void mem_add(std::string, std::string);
+		void mem_add(std::string, std::string, std::string);
 
 		bool check_1(struct opset, const int, std::ofstream&);
 		bool check_2(struct opset, const int, std::ofstream&);

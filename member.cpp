@@ -22,6 +22,10 @@ void member::addInfo(string type, string title, string date){
 	info.push_back(new struct resInfo(type, title, date));
 }
 
+void member::addInfo(string type, string title, string date, int size){
+	info.push_back(new struct resInfo(type, title, date, size));
+}
+
 void member::eraseInfo(string type, string title){
 	for(auto i = info.begin(); i != info.end(); i++){
 		if(!type.compare((*i)->type) && !title.compare((*i)->title)){
@@ -102,12 +106,25 @@ bool member::memOver(int size){
 	return ret;
 }
 
+void member::expireEbook(string Date){
+	date c(Date);
+	for(auto i : info){
+		if(!(i->type).compare("E-book")){
+			date d(i->date);
+			if(c - d >= during){
+				memAdd(i->size);
+				eraseInfo(i->type, i->title);
+			}
+		}
+	}
+}
+
 bool member::isLate(string Date){
 	bool ret = false;
 	date c(Date);
 	for(auto i : info){
 		date d(i->date);
-		if(c - d > 29){
+		if(c - d >= during){
 			ret = true;
 			break;
 		}
@@ -142,14 +159,17 @@ int member::retSeat(){
 undergraduate::undergraduate(string name) : member(name){
 	limit = 1;
 	memory = 100;
+	during = 14;
 }
 
 graduate::graduate(string name) : member(name){
 	limit = 5;
 	memory = 500;
+	during = 30;
 }
 
 faculty::faculty(string name) : member(name){
 	limit = 10;
 	memory = 1000;
+	during = 30;
 }

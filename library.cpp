@@ -179,7 +179,7 @@ void library::resManager(string str, ofstream &ofs){
 
 	count += 1;
 
-	mem_add(set.m_t, set.m_n);
+	mem_add(set.m_t, set.m_n, set.d);
 	if(check_1(set, count, ofs)) {}
 	else if(!(set.o).compare("B") && check_2(set, count, ofs)) {}
 	else if(!(set.o).compare("R") && check_3(set, count, ofs)) {}
@@ -209,7 +209,7 @@ void library::spcManager(string str, ofstream &ofs){
 
 		count += 1;
 
-		mem_add(set.m_t, set.m_n);
+		mem_add(set.m_t, set.m_n, set.d);
 		
 		spcReset(set.d);
 		if(check_8(set, count, ofs)) {}
@@ -319,25 +319,33 @@ void library::spcManager(string str, ofstream &ofs){
 	}
 }
 
-void library::mem_add(string type, string name){
+void library::mem_add(string type, string name, string Date){
 	if(!type.compare("Undergraduate")){
 		map<string, undergraduate*>::iterator it = undergraduates.find(name);
 		if(it == undergraduates.end()){
 			undergraduates.insert(pair<string, undergraduate*>
 					(name, new undergraduate(name)));	
+		}else{
+			(it->second)->expireEbook(Date);
 		}
 	}else if(!type.compare("Graduate")){
 		map<string, graduate*>::iterator it = graduates.find(name);
 		if(it == graduates.end()){
 			graduates.insert(pair<string, graduate*>
 					(name, new graduate(name)));	
+		}else{
+			(it->second)->expireEbook(Date);
 		}
+
 	}else if(!type.compare("Faculty")){
 		map<string, faculty*>::iterator it = faculties.find(name);
 		if(it == faculties.end()){
 			faculties.insert(pair<string, faculty*>
 					(name, new faculty(name)));	
+		}else{
+			(it->second)->expireEbook(Date);
 		}
+
 	}
 }
 
@@ -611,12 +619,12 @@ bool library::check_16(struct opset op, const int count, ofstream &ofs){
 void library::borrowRes(struct opset op){
 	if(!(op.m_t).compare("Undergraduate")){
 		map<string, undergraduate*>::iterator mt = undergraduates.find(op.m_n);
-		(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 
 		if(!(op.r_t).compare("Book")){
 			map<string, book*>::iterator rt = books.find(op.r_n);
 			(rt->second)->setUndergraduate(mt->second);
 			(rt->second)->setBorrowDate(op.d);
+			(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 		}else if(!(op.r_t).compare("Magazine")){
 			pair<string, string> p = parseTitle(op.r_n);
 			map<string, map<string, magazine*> >::iterator it = magazines.find(p.first);
@@ -627,18 +635,20 @@ void library::borrowRes(struct opset op){
 			}
 			(rt->second)->setUndergraduate(mt->second);
 			(rt->second)->setBorrowDate(op.d);
+			(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 		}else if(!(op.r_t).compare("E-book")){
 			map<string, ebook*>::iterator rt = ebooks.find(op.r_n);
 			(mt->second)->memSub((rt->second)->getSize());
+			(mt->second)->addInfo(op.r_t, op.r_n, op.d, (rt->second)->getSize());
 		}
 	}else if(!(op.m_t).compare("Graduate")){
 		map<string, graduate*>::iterator mt = graduates.find(op.m_n);
-		(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 
 		if(!(op.r_t).compare("Book")){
 			map<string, book*>::iterator rt = books.find(op.r_n);
 			(rt->second)->setGraduate(mt->second);
 			(rt->second)->setBorrowDate(op.d);
+			(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 		}else if(!(op.r_t).compare("Magazine")){
 			pair<string, string> p = parseTitle(op.r_n);
 			map<string, map<string, magazine*> >::iterator it = magazines.find(p.first);
@@ -649,18 +659,20 @@ void library::borrowRes(struct opset op){
 			}
 			(rt->second)->setGraduate(mt->second);
 			(rt->second)->setBorrowDate(op.d);
+			(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 		}else if(!(op.r_t).compare("E-book")){
 			map<string, ebook*>::iterator rt = ebooks.find(op.r_n);
 			(mt->second)->memSub((rt->second)->getSize());
+			(mt->second)->addInfo(op.r_t, op.r_n, op.d, (rt->second)->getSize());
 		}
 	}else if(!(op.m_t).compare("Faculty")){
 		map<string, faculty*>::iterator mt = faculties.find(op.m_n);
-		(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 
 		if(!(op.r_t).compare("Book")){
 			map<string, book*>::iterator rt = books.find(op.r_n);
 			(rt->second)->setFaculty(mt->second);
 			(rt->second)->setBorrowDate(op.d);
+			(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 		}else if(!(op.r_t).compare("Magazine")){
 			pair<string, string> p = parseTitle(op.r_n);
 			map<string, map<string, magazine*> >::iterator it = magazines.find(p.first);
@@ -671,9 +683,11 @@ void library::borrowRes(struct opset op){
 			}
 			(rt->second)->setFaculty(mt->second);
 			(rt->second)->setBorrowDate(op.d);
+			(mt->second)->addInfo(op.r_t, op.r_n, op.d);
 		}else if(!(op.r_t).compare("E-book")){
 			map<string, ebook*>::iterator rt = ebooks.find(op.r_n);
 			(mt->second)->memSub((rt->second)->getSize());
+			(mt->second)->addInfo(op.r_t, op.r_n, op.d, (rt->second)->getSize());
 		}
 	}
 }
@@ -888,20 +902,6 @@ bool library::check_12(struct spset sp, const int count, ofstream &ofs){
 
 bool library::check_13(struct spset sp, const int count, ofstream &ofs){
 	bool ret = false;
-
-	/*if(!(sp.s_t).compare("StudyRoom")){
-		if(stoi(sp.t) > 3){
-			ret = true;
-		}
-	}
-
-	else{	
-		if(!(sp.m_t).compare("Undergraduate")){
-			if(stoi(sp.t) > 3){
-				ret = true;
-			}
-		}
-	}*/
 
 	if(stoi(sp.t) > 3){
 		ret = true;
