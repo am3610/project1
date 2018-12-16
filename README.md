@@ -60,6 +60,7 @@ Library_statistics.sh is a shell that executes LSM with extracted inputs and put
 * Shell usage
 	* Type "./library_statistics.sh" with some parameters.
 	* The first, second and third parameter is "all" by default.
+	* resource.dat, input.dat and space.dat must be in data directory to use this shell.
 ```
 ./library_statistics.sh <param1> <param2> <param3> <param4>
 ```
