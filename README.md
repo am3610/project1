@@ -52,5 +52,40 @@ make
 	* empty			: Change seat status to "EMPTY". Also, save when the user leave the seat.
 	* comback		: Change seat status to "OCCUPIED".
 	* getEtime		: Return empty time.
----------------
 
+# Statistics shell
+
+Library_statistics.sh is a shell that executes LSM with extracted inputs and puts the result into a suitable path automatically.
+
+* Shell usage
+	* Type "./library_statistics.sh" with some parameters.
+	* The first, second and third parameter is "all" by default.
+```
+./library_statistics.sh <param1> <param2> <param3> <param4>
+```
+* Parameters
+
+param1 | param2 | param3 | param4 
+------ | ------ | ------ | ------
+resource | book | | |
+resource | e-book | | |
+resource | magazine | | |
+resource | all | | |
+input | date | from(yy/mm/dd) | to(yy/mm/dd) |
+input | book | | |
+input | e-book | | |
+input | magazine | | |
+input | undergraduate | | |
+input | graduate | | |
+input | faculty | | |
+input | all(without date.dat) | | |
+space | date | from(yy/mm/dd/hh) | to(yy/mm/dd/hh) |
+space | studyromm | room number(1 ~ 10, all) | |
+space | seat | floor(1 ~ 3, all) | |
+space | undergraduate | | |
+space | graduate | | |
+space | faculty | | |
+space | all(without date.dat) | | |
+ouput | stat_table | | |
+
+---------------
